@@ -1,12 +1,20 @@
 function convert_to_multitiff
 
 %% Convert to multitiff
-% User Input
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%% User Input %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 Data_Folder = '~/Desktop/Michelle_OB_Thunder/Data/141011_Fish3/';
-Stim = {'30ugHAM', '3ugHAS'};
+Stim = {'3ugHAS'};
 num_z = 27;
 num_t = 121;
 delete_flag = 0; %0 - if you dont want to delete the single tiffs, 1 if you do. The files will get permenantely deleted after all multitiffs are saved
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%% Main Script %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 %Pick up data from the respective folders that has been registered
 %Convert to multitiffs for each Z with number of time points
@@ -45,5 +53,6 @@ if delete_flag == 1
         end
     end
 end
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 
