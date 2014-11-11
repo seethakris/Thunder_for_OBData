@@ -3,7 +3,7 @@ function image_register_save_as_multitiff_rawimage
 %% Register images in X-Y
 % User Input
 Data_Folder = '~/Desktop/Michelle_OB_Thunder/Data/141011_Fish3/';
-Result_Folder_Name = '~/Desktop/'; %Result FOlder name
+Result_Folder_Name =  '/Users/seetha/Desktop/Michelle_OB_Thunder/Data/141010 Fish2 Deconvolved/'; %Result Folder name
 Stim = {'30ugHAM', '3ugHAS'};
 num_z = 27;
 num_t = 121;
@@ -21,12 +21,12 @@ for s = 1:length(Stim) %Loop through each stimulus
     
     for z = 1:num_z %Loop through each z stack
         
-        base = im2uint8(imread([Stim_Folder, Stim{s},'_T1.tif'], z)); %To change stimulus name
+        base = mat2gray(imread([Stim_Folder, Stim{s},'_T1.tif'], z)); %To change stimulus name
         
         for t = 1:num_t
             %Loop through each time point
             
-            unregistered = im2double(imread([Stim_Folder, Stim{s},'_T', sprintf('%01.0f', t), '.tif'], z)); %To change  stimulus name
+            unregistered = mat2gray(imread([Stim_Folder, Stim{s},'_T', sprintf('%01.0f', t), '.tif'], z)); %To change  stimulus name
             
             c = normxcorr2(base,unregistered); %Calculate correlation between base and unregistered image
             
