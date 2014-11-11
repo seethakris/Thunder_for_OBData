@@ -147,7 +147,6 @@ def get_matrix_for_textfile(data, zz, time_start, time_end,f_f_flag, dff_start, 
         fig2 = plt.gcf()
         pp.savefig(fig2)
         plt.close()
-        A = None    
 
     return temp_matfile_for_thunder[:,0:-smooth_window+1]
 
