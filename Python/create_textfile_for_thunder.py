@@ -53,7 +53,7 @@ def create_textfile(Exp_Folder, filename_save_prefix, img_size_x, img_size_y,\
             f_f_flag, dff_start, dff_end, stim_start,stim_end, num_z_planes[lst], pp)
             
             #Append each tiff files data to a bigger matrix and Plot heatmap of data for validation
-            if Matfile_for_Thunder == None:
+            if Matfile_for_Thunder is None:
                 Matfile_for_Thunder = temp_matfile_for_thunder
             else:
                 Matfile_for_Thunder = np.append(Matfile_for_Thunder,temp_matfile_for_thunder, axis=0)
@@ -73,7 +73,7 @@ def create_textfile(Exp_Folder, filename_save_prefix, img_size_x, img_size_y,\
             f_f_flag, dff_start, dff_end, stim_start,stim_end, lst, pp)
             
             #Append each tiff files data to a bigger matrix
-            if Matfile_for_Thunder == None:
+            if Matfile_for_Thunder is None:
                 Matfile_for_Thunder = temp_matfile_for_thunder
             else:
                 Matfile_for_Thunder = np.append(Matfile_for_Thunder,temp_matfile_for_thunder, axis=0)
