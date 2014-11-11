@@ -2,8 +2,9 @@ function image_register_save_as_multitiff
 
 %% Register images in X-Y
 % User Input
-Data_Folder = '~/Desktop/Michelle_OB_Thunder/Data/141011_Fish3/';
-Stim = {'30ugHAM', '3ugHAS'};
+Data_Folder = '/Users/seetha/Desktop/Michelle_OB_Thunder/Data/141010 Fish2 Deconvolved/';
+Result_Folder_Name = '~/Desktop/Michelle_OB_Thunder/Data/141010 Fish2 Deconvolved/'; %Result FOlder name
+Stim = {'30ugHAM', '3ugHAS', '30ugHAL'};
 num_z = 27;
 num_t = 121;
 
@@ -12,7 +13,7 @@ num_t = 121;
 for s = 1:length(Stim) %Loop through each stimulus
     
     Stim_Folder = [Data_Folder, Stim{s}, filesep];
-    Result_Folder = [Data_Folder, Stim{s}, filesep, 'Registered', filesep];
+    Result_Folder = [Result_Folder_Name, Stim{s}, filesep, 'Registered', filesep]; %Result folder variable
     
     if ~isdir(Result_Folder)
         mkdir(Result_Folder)
@@ -20,12 +21,12 @@ for s = 1:length(Stim) %Loop through each stimulus
     
     for z = 1:num_z %Loop through each z stack
         
-        base = im2uint8(imread([Stim_Folder, '10_',Stim{s},'_T001.tif'], z));
+        base = mat2gray(imread([Stim_Folder, '10_', Stim{s},'_T001.tif'], z));
         
         for t = 1:num_t
             %Loop through each time point
             
-            unregistered = im2double(imread([Stim_Folder, '10_',Stim{s},'_T', sprintf('%03.0f', t), '.tif'], z));
+            unregistered = mat2gray(imread([Stim_Folder, '10_', Stim{s},'_T', sprintf('%03.0f', t), '.tif'], z));
             
             c = normxcorr2(base,unregistered); %Calculate correlation between base and unregistered image
             
