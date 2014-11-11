@@ -3,7 +3,7 @@ function image_register_save_as_multitiff
 %% Register images in X-Y
 % User Input
 Data_Folder = '/Users/seetha/Desktop/Michelle_OB_Thunder/Data/141010 Fish2 Deconvolved/';
-Result_Folder_Name = '~/Desktop/Michelle_OB_Thunder/Data/141010 Fish2 Deconvolved/'; %Result FOlder name
+Result_Folder_Name = '/Users/seetha/Desktop/Michelle_OB_Thunder/Data/141010 Fish2 Deconvolved/'; %Result FOlder name
 Stim = {'30ugHAM', '3ugHAS', '30ugHAL'};
 num_z = 27;
 num_t = 121;
@@ -93,10 +93,12 @@ for s = 1:length(Stim) %Loop through each stimulus
                 registered = im2uint8(unregistered);
             end
             
+            
+            %% Save image
             if t == 1
-                imwrite(registered,[Result_Folder, 'Registered_Z=',int2str(z)],'tif');
+                imwrite(registered,[Result_Folder, 'Registered_Z=',int2str(z), '.tif'],'tif');
             else
-                imwrite(registered,[Result_Folder, 'Registered_Z=',int2str(z)],'tif','WriteMode','append');
+                imwrite(registered,[Result_Folder, 'Registered_Z=',int2str(z), '.tif'],'tif','WriteMode','append');
             end
             
         end

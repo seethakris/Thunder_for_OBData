@@ -94,9 +94,9 @@ for s = 1:length(Stim) %Loop through each stimulus
             end
             
             if t == 1
-                imwrite(registered,[Result_Folder, 'Registered_Z=',int2str(z)],'tif');
+                imwrite(registered,[Result_Folder, 'Registered_Z=',int2str(z), '.tif'],'tif');
             else
-                imwrite(registered,[Result_Folder, 'Registered_Z=',int2str(z)],'tif','WriteMode','append');
+                imwrite(registered,[Result_Folder, 'Registered_Z=',int2str(z), '.tif'],'tif','WriteMode','append');
             end
             
         end
