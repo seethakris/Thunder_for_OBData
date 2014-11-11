@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-Convert data to text from multi tiffs
+Convert data to text from multi tiffs from a single stimulus folder
 """
 
 #Import relevant libraries
@@ -58,7 +58,7 @@ def create_textfile(Exp_Folder, filename_save_prefix, img_size_x, img_size_y,\
             else:
                 Matfile_for_Thunder = np.append(Matfile_for_Thunder,temp_matfile_for_thunder, axis=0)
             
-    else: #Get all files
+    elif num_z_planes==0: #Get all files
         
         for lst in xrange(1,np.size(onlyfiles, axis=0)+1): 
             tif = TIFF.open(os.path.join(Exp_Folder,('Registered_Z='+str(lst)+'.tif')), mode='r') #Open multitiff  
@@ -149,7 +149,7 @@ def get_matrix_for_textfile(data, zz, time_start, time_end,f_f_flag, dff_start, 
         plt.close()
         A = None    
 
-    return temp_matfile_for_thunder[:,-smooth_window+1:]
+    return temp_matfile_for_thunder[:,1:-smooth_window+1]
 
 def plot_vertical_lines(stim_start,stim_end):
     plt.axvline(x=stim_start, linestyle='-', color='k', linewidth=1)
