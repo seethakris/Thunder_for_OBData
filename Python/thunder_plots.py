@@ -46,7 +46,7 @@ def plot_pca_maps(pca, maps, pts, clrs, recon, unique_clrs, matched_pixels, \
                 if num_z_planes ==0:
                     plt.title((Stimulus_Name + ' Z=' + str(ii+1)))
                 else:
-                    plt.title((Stimulus_Name + ' Z=' + str(num_z_planes[ii]+1)))
+                    plt.title((Stimulus_Name + ' Z=' + str(num_z_planes[ii])))
                 plt.axis('off')                   
                 fig2 = plt.gcf()
                 pp.savefig(fig2)
