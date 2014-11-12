@@ -95,12 +95,21 @@ def create_textfile_combined(Exp_Folder, Stimulus_Folders, filename_save_prefix,
                 Matfile_for_Thunder_Combined = Matfile_for_Thunder
             else:
                 Matfile_for_Thunder_Combined = np.append(Matfile_for_Thunder_Combined,Matfile_for_Thunder[:,3:], axis=1)               
-        
+    
+    #Smoothen the t series
+    Matfile_for_Thunder_Combined_smooth = np.zeros([np.size(Matfile_for_Thunder_Combined,0), np.size(Matfile_for_Thunder_Combined,1)+smooth_window-1])
+    Matfile_for_Thunder_Combined_smooth[:,0:3] = Matfile_for_Thunder_Combined[:,0:3]    
+    for ii in range(0, np.size(Matfile_for_Thunder_Combined,0)):
+        Matfile_for_Thunder_Combined_smooth[ii,3:] = smooth(Matfile_for_Thunder_Combined[ii,3:],smooth_window,'hanning')
+    
+    
+    
     pp.close()        
     print 'Saving all the data in the text file '            
-    np.savetxt(Exp_Folder+filesep+filename_save_prefix+'.txt', Matfile_for_Thunder_Combined, fmt='%i')#Save as text file
+    np.savetxt(Exp_Folder+filesep+filename_save_prefix+'.txt', Matfile_for_Thunder_Combined_smooth, fmt='%i')#Save as text file
     
-    return Matfile_for_Thunder_Combined
+    return Matfile_for_Thunder_Combined_smooth
+
 
 def get_data_from_tiff(tif, stim, img_size_x, img_size_y, num_time, filename, pp):
     data = np.zeros((img_size_x,img_size_y,num_time), dtype=np.uint8)
@@ -132,7 +141,7 @@ def get_data_from_tiff(tif, stim, img_size_x, img_size_y, num_time, filename, pp
 def get_matrix_for_textfile(data, stim, zz, time_start, time_end,f_f_flag, dff_start, dff_end,stim_start,stim_end,filename, pp):
     
     print 'Creating array from stack for Stim ' + stim + ' Z='+ str(filename)
-    temp_matfile_for_thunder = np.zeros([np.size(data, axis=0)*np.size(data, axis=1),3+(time_end-time_start+1)+smooth_window-2], dtype=np.int)
+    temp_matfile_for_thunder = np.zeros([np.size(data, axis=0)*np.size(data, axis=1),3+(time_end-time_start)], dtype=np.int)
     count = 0    
     for yy in xrange(0,np.size(data, axis=1)):
         for xx in xrange(0,np.size(data, axis=0)): 
@@ -141,9 +150,9 @@ def get_matrix_for_textfile(data, stim, zz, time_start, time_end,f_f_flag, dff_s
             temp_matfile_for_thunder[count,2] = zz;
             # Create delta f/f values if necessary
             if f_f_flag==0:
-                temp_matfile_for_thunder[count,3:] = smooth(data[xx,yy,time_start:time_end],smooth_window,'hanning')
+                temp_matfile_for_thunder[count,3:] = data[xx,yy,time_start:time_end]
             else:
-                temp_matfile_for_thunder[count,3:] = smooth(((data[xx,yy,time_start:time_end]-np.mean(data[xx,yy,dff_start:dff_end]))/np.std(data[xx,yy,dff_start:dff_end])),smooth_window,'hanning')
+                temp_matfile_for_thunder[count,3:] = (data[xx,yy,time_start:time_end]-np.mean(data[xx,yy,dff_start:dff_end]))/np.std(data[xx,yy,dff_start:dff_end])
             count = count+1 
     
     #Plot heatmap for validation    
@@ -168,7 +177,7 @@ def get_matrix_for_textfile(data, stim, zz, time_start, time_end,f_f_flag, dff_s
         plt.close()
         A = None    
 
-    return temp_matfile_for_thunder[:,0:-smooth_window+1]
+    return temp_matfile_for_thunder
 
 def plot_vertical_lines(stim_start,stim_end):
     plt.axvline(x=stim_start, linestyle='-', color='k', linewidth=1)
