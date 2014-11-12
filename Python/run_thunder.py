@@ -14,13 +14,13 @@ Exp_Folder = '/Users/seetha/Desktop/Michelle_OB_Thunder/Data/141010 Fish2 Deconv
 
 #Prefix using which all text files, figures, matfiles and numpy array for this run of thunder will be saved. 
 #If text file with prefixed name already exists, the script will go straight to running PCA 
-filename_save_prefix = 'test6' 
+filename_save_prefix = 'test1' 
 
 #Experiment parameters
-img_size_x = 20 #384 #X and Y resolution - if there are images that dont have this resolution, they will be resized
-img_size_y = 20 #502
+img_size_x = 384 #X and Y resolution - if there are images that dont have this resolution, they will be resized
+img_size_y = 502
 num_time = 121  #Total Number of time points in experiment
-num_z_planes = 0 #Mention z-planes to be used for analysis. eg [1,3,8] If all planes to be used, say num_z_planes=0
+num_z_planes = [1,3,5] #Mention z-planes to be used for analysis. eg [1,3,8] If all planes to be used, say num_z_planes=0
 
 #Only time points specified in these two variables will be used 
 #for creating text files and further analysis
@@ -37,7 +37,7 @@ dff_start = 10
 dff_end = 20
 
 #Stimulus Parameters
-combine = 0 #1 - Combine time points from all stimulus planes in Exp_Folder, 0-Run PCA on each seperately
+combine = 1 #1 - Combine time points from all stimulus planes in Exp_Folder, 0-Run PCA on each seperately
 
 #PCA parameters
 pca_components = 2 #Number of pca components to detect from files
@@ -52,7 +52,6 @@ color_map = 'polar' #Colormap for plotting principle components
 #Import some python libraries
 import os
 filesep = os.path.sep
-import numpy as np
 import time
 
 #Import thunder libraries
@@ -64,7 +63,7 @@ from create_textfile_for_thunder import create_textfile
 from create_textfile_for_thunder_combined import create_textfile_combined
 from thunder_analysis import run_pca
 from thunder_analysis import make_pca_maps
-
+from thunder_plots import plot_pca_maps
 ######################################################################
 
 
@@ -113,7 +112,7 @@ time.sleep(2)
 #Load data and run pca from the text file using thunder context. 
 #Work on each stimulus folder individually if combine = 0, together if combine =1
 if combine == 0:    
-    for ii in range(0, 1): #len(Stimulus_Folders)):
+    for ii in range(0, len(Stimulus_Folders)):
         Working_Directory = os.path.join(Exp_Folder, Stimulus_Folders[ii], 'Registered')
         #Load data        
         data = tsc.loadSeries(Working_Directory+filesep+filename_save_prefix+'.txt', inputformat='text', nkeys=3)
@@ -127,13 +126,46 @@ if combine == 0:
         
         #Create polar maps
         start_time = time.time()   
-        print 'Creating polar maps...on '+ Exp_Folder
+        print 'Creating polar maps...on '+ Stimulus_Folders[ii]
         maps, pts, clrs, recon, unique_clrs, matched_pixels, matched_signals, mean_signal, sem_signal = make_pca_maps(pca, imgs_pca, img_size_x,\
         img_size_y, num_pca_colors, num_samples, thresh_pca, color_map)
         print 'Creating polar maps took '+ str(int(time.time()-start_time)) +' seconds'
         
+        #Plot PCA components and maps
+        start_time = time.time()   
+        print 'Plotting PCA figures...on '+ Stimulus_Folders[ii]
+        plot_pca_maps(pca, maps, pts, clrs, recon, unique_clrs, matched_pixels, matched_signals, num_z_planes,\
+        Working_Directory, filename_save_prefix, Stimulus_Folders[ii], stim_start, stim_end)        
+        print 'Plotting PCA figures took '+ str(int(time.time()-start_time)) +' seconds'
+       
+else:
+    
+        Working_Directory = Exp_Folder
+        #Load data        
+        data = tsc.loadSeries(Working_Directory+filesep+filename_save_prefix+'.txt', inputformat='text', nkeys=3)
+        data.center()        
+        data = data.cache()
 
-
+        #Run PCA
+        start_time = time.time()   
+        print 'Running pca for all files...in '+ Exp_Folder
+        pca, imgs_pca = run_pca(data,pca_components)                
+        print 'Running PCA took '+ str(int(time.time()-start_time)) +' seconds'  
+        
+        #Create polar maps
+        start_time = time.time()   
+        print 'Creating polar maps for all files...in '+ Exp_Folder
+        maps, pts, clrs, recon, unique_clrs, matched_pixels, matched_signals, mean_signal, sem_signal = make_pca_maps(pca, imgs_pca, img_size_x,\
+        img_size_y, num_pca_colors, num_samples, thresh_pca, color_map)
+        print 'Creating polar maps took '+ str(int(time.time()-start_time)) +' seconds'
+        
+        #Plot PCA components and maps
+        start_time = time.time()   
+        print 'Plotting PCA figure sfor all files...in '+Exp_Folder
+        Exp_Folder_Name = Exp_Folder[Exp_Folder[:-1].rfind('/')+1:-1]        
+        plot_pca_maps(pca, maps, pts, clrs, recon, unique_clrs, matched_pixels, matched_signals, num_z_planes,\
+        Working_Directory, filename_save_prefix, Exp_Folder_Name, stim_start, stim_end)        
+        print 'Plotting PCA figures took '+ str(int(time.time()-start_time)) +' seconds'
 
 
 
