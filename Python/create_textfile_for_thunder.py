@@ -148,7 +148,7 @@ def get_matrix_for_textfile(data, zz, time_start, time_end,f_f_flag, dff_start, 
         pp.savefig(fig2)
         plt.close()
 
-    return temp_matfile_for_thunder[:,0:-smooth_window+1]
+    return temp_matfile_for_thunder[:,0:-smooth_window+2]
 
 def plot_vertical_lines(stim_start,stim_end):
     plt.axvline(x=stim_start, linestyle='-', color='k', linewidth=1)
