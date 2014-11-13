@@ -20,8 +20,10 @@ for s = 1:length(Stim) %Loop through each stimulus
     end
     
     for z = 1:num_z %Loop through each z stack
-        
-        base = mat2gray(imread([Stim_Folder, '10_', Stim{s},'_T001.tif'], z));
+        Stim_Folder_Base = [Data_Folder, Stim{1}, filesep]; % Use these two lines if one stimulus is to be used as template.
+        base = mat2gray(imread([Stim_Folder_Base, '10_', Stim{1},'_T001.tif'], z));
+
+        % base = mat2gray(imread([Stim_Folder, '10_', Stim{1},'_T001.tif'], z)); % Uncomment this line if first time point from eahc stimulus is to be used as template.
         
         for t = 1:num_t
             %Loop through each time point
