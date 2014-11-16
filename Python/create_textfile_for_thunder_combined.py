@@ -22,7 +22,7 @@ from smooth import smooth
 smooth_window = 5
 
 def create_textfile_combined(Exp_Folder, Stimulus_Folders, filename_save_prefix, img_size_x, img_size_y,\
-            num_time, time_start, time_end, num_z_planes, stim_start, stim_end,\
+            img_size_crop_x, img_size_crop_y, num_time, time_start, time_end, num_z_planes, stim_start, stim_end,\
             f_f_flag, dff_start, dff_end):
     filesep = os.path.sep #Get fileseperator according to operating system
     
@@ -49,8 +49,8 @@ def create_textfile_combined(Exp_Folder, Stimulus_Folders, filename_save_prefix,
                 data = get_data_from_tiff(tif, stim, img_size_x, img_size_y, num_time, num_z_planes[lst], pp) #get data in matrix form from multitiff
                 
                 #Get data in thunder format [xx,yy,zz,time]
-                temp_matfile_for_thunder = get_matrix_for_textfile(data, stim, zz, time_start, time_end,\
-                f_f_flag, dff_start, dff_end, stim_start,stim_end, num_z_planes[lst], pp)
+                temp_matfile_for_thunder = get_matrix_for_textfile(data,img_size_crop_x, img_size_crop_y,\
+                stim, zz, time_start, time_end,f_f_flag, dff_start, dff_end, stim_start,stim_end, num_z_planes[lst], pp)
                 
                 #Append each tiff files data to a bigger matrix - for each stimulus first
                 if Matfile_for_Thunder is None:
@@ -81,8 +81,8 @@ def create_textfile_combined(Exp_Folder, Stimulus_Folders, filename_save_prefix,
                 data = get_data_from_tiff(tif, stim, img_size_x, img_size_y, num_time, lst, pp) #get data in matrix form from multitiff
                 
                 #Get data in thunder format [xx,yy,zz,time]
-                temp_matfile_for_thunder = get_matrix_for_textfile(data, stim, zz, time_start, time_end,\
-                f_f_flag, dff_start, dff_end, stim_start,stim_end, lst, pp)
+                temp_matfile_for_thunder = get_matrix_for_textfile(data, img_size_crop_x, img_size_crop_y, 
+                stim, zz, time_start, time_end,f_f_flag, dff_start, dff_end, stim_start,stim_end, lst, pp)
                 
                 #Append each tiff files data to a bigger matrix - for each stimulus first
                 if Matfile_for_Thunder is None:
@@ -136,23 +136,36 @@ def get_data_from_tiff(tif, stim, img_size_x, img_size_y, num_time, filename, pp
         
     return data
     
+       
+def get_matrix_for_textfile(data, img_size_crop_x, img_size_crop_y, stim, zz, time_start, time_end,\
+    f_f_flag, dff_start, dff_end,stim_start,stim_end,filename, pp):
     
-    
-def get_matrix_for_textfile(data, stim, zz, time_start, time_end,f_f_flag, dff_start, dff_end,stim_start,stim_end,filename, pp):
-    
+    #Cropping unwanted pixels as specified by user
+    if img_size_crop_x!= 0 and img_size_crop_y!=0:
+        print "Cropping x and y pixels.."
+        data1 = data[img_size_crop_y:-img_size_crop_y, img_size_crop_x:-img_size_crop_x]
+    elif img_size_crop_x==0 and img_size_crop_y!=0:
+        print "Cropping only y pixels.."
+        data1 = data[img_size_crop_y:-img_size_crop_y, :]
+    elif img_size_crop_x!=0 and img_size_crop_y==0:
+        print "Cropping only x pixels.."
+        data1 = data[:, img_size_crop_x:-img_size_crop_x]
+    else:
+        data1 = data
+   
     print 'Creating array from stack for Stim ' + stim + ' Z='+ str(filename)
-    temp_matfile_for_thunder = np.zeros([np.size(data, axis=0)*np.size(data, axis=1),3+(time_end-time_start)], dtype=np.int)
+    temp_matfile_for_thunder = np.zeros([np.size(data1, axis=0)*np.size(data1, axis=1),3+(time_end-time_start)], dtype=np.int)
     count = 0    
-    for yy in xrange(0,np.size(data, axis=1)):
-        for xx in xrange(0,np.size(data, axis=0)): 
+    for yy in xrange(0,np.size(data1, axis=1)):
+        for xx in xrange(0,np.size(data1, axis=0)): 
             temp_matfile_for_thunder[count,0] = xx+1;
             temp_matfile_for_thunder[count,1] = yy+1;
             temp_matfile_for_thunder[count,2] = zz;
             # Create delta f/f values if necessary
             if f_f_flag==0:
-                temp_matfile_for_thunder[count,3:] = data[xx,yy,time_start:time_end]
+                temp_matfile_for_thunder[count,3:] = data1[xx,yy,time_start:time_end]
             else:
-                temp_matfile_for_thunder[count,3:] = (data[xx,yy,time_start:time_end]-np.mean(data[xx,yy,dff_start:dff_end]))/np.std(data[xx,yy,dff_start:dff_end])
+                temp_matfile_for_thunder[count,3:] = (data1[xx,yy,time_start:time_end]-np.mean(data1[xx,yy,dff_start:dff_end]))/np.std(data1[xx,yy,dff_start:dff_end])
             count = count+1 
     
     #Plot heatmap for validation    
