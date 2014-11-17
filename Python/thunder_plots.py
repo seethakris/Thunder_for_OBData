@@ -63,9 +63,9 @@ def plot_pca_maps(pca, maps, pts, clrs, recon, unique_clrs, matched_pixels, \
         sns.axlabel("Time (seconds)","a.u")
         A = []
         for ii in xrange(0,np.size(pca.comps.T, 0)):
-            A = np.append(A, ['comp' + str(ii+1)])
+            A = np.append(A, [str(ii+1)])
+            
         ax1.legend(A, loc=4)
-        plot_vertical_lines(stim_start,stim_end)
         plt.axhline(y=0, linestyle='-', color='k', linewidth=1)
         
     #Plot mean signals according to color and boxplot of number of pixels in each plane
