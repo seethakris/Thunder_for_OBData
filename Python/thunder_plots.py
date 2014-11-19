@@ -15,7 +15,7 @@ import seaborn as sns #For creating nice plots
 
 def plot_pca_maps(pca, maps, pts, clrs, recon, unique_clrs, matched_pixels, \
     matched_signals,  num_z_planes, Exp_Folder, filename_save_prefix, Stimulus_Name,\
-    stim_start, stim_end):
+    stim_start, stim_end, combine):
      
     filesep = os.path.sep
      
@@ -23,8 +23,11 @@ def plot_pca_maps(pca, maps, pts, clrs, recon, unique_clrs, matched_pixels, \
     Figure_PDFDirectory = Exp_Folder+filesep+'Figures'+filesep
     if not os.path.exists(Figure_PDFDirectory):
         os.makedirs(Figure_PDFDirectory)           
-    pp = PdfPages(Figure_PDFDirectory+filename_save_prefix+'_PCA.pdf')
-    
+    if combine == 0:
+        pp = PdfPages(Figure_PDFDirectory+filename_save_prefix+'_PCA.pdf')
+    else:
+        pp = PdfPages(Figure_PDFDirectory+filename_save_prefix+'_PCA_Combined.pdf')
+                
     sns.set_context("poster")  
     
     ############ Plot Colormaps of scores ############    
