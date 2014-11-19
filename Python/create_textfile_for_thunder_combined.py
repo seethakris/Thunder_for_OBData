@@ -2,6 +2,7 @@
 """
 Created on Tue Nov 11 17:25:01 2014
 Convert data to text from multi tiffs from all stimulus folders in the experiment folder
+and concatenate their time points for PCA
 @author: seetha
 """
 
@@ -30,7 +31,7 @@ def create_textfile_combined(Exp_Folder, Stimulus_Folders, filename_save_prefix,
     Figure_PDFDirectory = Exp_Folder+filesep+'Figures'+filesep
     if not os.path.exists(Figure_PDFDirectory):
         os.makedirs(Figure_PDFDirectory) 
-    pp = PdfPages(Figure_PDFDirectory+filename_save_prefix+'_PreprossData.pdf')
+    pp = PdfPages(Figure_PDFDirectory+filename_save_prefix+'_PreprossData_Combined.pdf')
     
     zz = 0 #each multitiff file is considered as one stack
     Matfile_for_Thunder_Combined = None
@@ -106,7 +107,7 @@ def create_textfile_combined(Exp_Folder, Stimulus_Folders, filename_save_prefix,
     
     pp.close()        
     print 'Saving all the data in the text file '            
-    np.savetxt(Exp_Folder+filesep+filename_save_prefix+'.txt', Matfile_for_Thunder_Combined_smooth, fmt='%i')#Save as text file
+    np.savetxt(Exp_Folder+filesep+filename_save_prefix+'_combine.txt', Matfile_for_Thunder_Combined_smooth, fmt='%i')#Save as text file
     
     return Matfile_for_Thunder_Combined_smooth
 
