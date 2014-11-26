@@ -14,11 +14,11 @@ Exp_Folder = '/Users/seetha/Desktop/Michelle_OB_Thunder/Data/141010 Fish2 Deconv
 
 #Prefix using which all text files, figures, matfiles and numpy array for this run of thunder will be saved. 
 #If text file with prefixed name already exists, the script will go straight to running PCA 
-filename_save_prefix = 'test1' 
+filename_save_prefix = 'test2' 
 
 #Experiment parameters
-img_size_x = 384 #X and Y resolution - if there are images that dont have this resolution, they will be resized
-img_size_y = 502 
+img_size_x = 34 #X and Y resolution - if there are images that dont have this resolution, they will be resized
+img_size_y = 50 
 img_size_crop_x = 0 #How many pixels to crop on x and y axis. If none say 0
 img_size_crop_y = 0
 
@@ -59,6 +59,7 @@ color_map = 'polar' #Colormap for plotting principle components
 import os
 filesep = os.path.sep
 import time
+import scipy
 
 #Import thunder libraries
 from thunder import ThunderContext
@@ -160,6 +161,20 @@ if combine == 0:
         plot_pca_maps(pca, maps, pts, clrs, recon, unique_clrs, matched_pixels, matched_signals, num_z_planes,\
         Working_Directory, filename_save_prefix, Stimulus_Folders[ii], stim_start, stim_end, combine)        
         print 'Plotting PCA figures took '+ str(int(time.time()-start_time)) +' seconds'
+        
+        print 'Saving PCA as mat files'
+        #Save as matfile
+        scipy.io.savemat(Working_Directory+filename_save_prefix+'_PCA.mat', dict(comp=pca.comps.T,\
+        latent=pca.latent,scores=imgs_pca, color_maps=maps,pca_scatter_pts=pts, pts_clrs=clrs, \
+        unique_clrs=unique_clrs, matched_pixels=matched_pixels,\
+        mean_signal=mean_signal, sem_signal=sem_signal, img_x=img_size_x , img_y=img_size_y,\
+        crop_x=img_size_crop_x, crop_y=img_size_crop_y, num_time=num_time, num_z=num_z_planes,\
+        time_start=time_start,time_end=time_end, stim_start=stim_start, stim_end=stim_end,\
+        f_f_flag=f_f_flag, dff_start=dff_start, dff_end=dff_end, combine=combine, \
+        pca_components=pca_components, num_pca_colors=num_pca_colors, \
+        num_samples=num_samples, thresh_pca=thresh_pca, color_map=color_map))
+        
+        print 'Saving PCA as mat files took ' + str(int(time.time()-start_time)) +' seconds'
        
 elif combine == 1:
     
@@ -190,6 +205,20 @@ elif combine == 1:
         Working_Directory, filename_save_prefix, Exp_Folder_Name, stim_start, stim_end, combine)        
         print 'Plotting PCA figures took '+ str(int(time.time()-start_time)) +' seconds'
         
+        print 'Saving PCA as mat files'
+        #Save as matfile
+        scipy.io.savemat(Working_Directory+filename_save_prefix+'_PCA_combine.mat', dict(comp=pca.comps.T,\
+        latent=pca.latent,scores=imgs_pca, color_maps=maps,pca_scatter_pts=pts, pts_clrs=clrs, \
+        unique_clrs=unique_clrs, matched_pixels=matched_pixels,\
+        mean_signal=mean_signal, sem_signal=sem_signal, img_x=img_size_x , img_y=img_size_y,\
+        crop_x=img_size_crop_x, crop_y=img_size_crop_y, num_time=num_time, num_z=num_z_planes,\
+        time_start=time_start,time_end=time_end, stim_start=stim_start, stim_end=stim_end,\
+        f_f_flag=f_f_flag, dff_start=dff_start, dff_end=dff_end, combine=combine, \
+        pca_components=pca_components, num_pca_colors=num_pca_colors, \
+        num_samples=num_samples, thresh_pca=thresh_pca, color_map=color_map))
+        
+        print 'Saving PCA as mat files took ' + str(int(time.time()-start_time)) +' seconds'
+                
 elif combine == 2:
     
         Working_Directory = Exp_Folder
@@ -219,6 +248,19 @@ elif combine == 2:
         print 'Plotting PCA figures took '+ str(int(time.time()-start_time)) +' seconds'
         
         
+        print 'Saving PCA as mat files'
+        #Save as matfile
+        scipy.io.savemat(Working_Directory+filename_save_prefix+'_PCA_stack.mat', dict(comp=pca.comps.T,\
+        latent=pca.latent,scores=imgs_pca, color_maps=maps,pca_scatter_pts=pts, pts_clrs=clrs, \
+        unique_clrs=unique_clrs, matched_pixels=matched_pixels,\
+        mean_signal=mean_signal, sem_signal=sem_signal, img_x=img_size_x , img_y=img_size_y,\
+        crop_x=img_size_crop_x, crop_y=img_size_crop_y, num_time=num_time, num_z=num_z_planes,\
+        time_start=time_start,time_end=time_end, stim_start=stim_start, stim_end=stim_end,\
+        f_f_flag=f_f_flag, dff_start=dff_start, dff_end=dff_end, combine=combine, \
+        pca_components=pca_components, num_pca_colors=num_pca_colors, \
+        num_samples=num_samples, thresh_pca=thresh_pca, color_map=color_map))
+        
+        print 'Saving PCA as mat files took ' + str(int(time.time()-start_time)) +' seconds'
 
 
 
