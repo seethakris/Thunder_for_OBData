@@ -29,7 +29,7 @@ def plot_pca_maps_for_stacks(pca, maps, pts, clrs, recon, unique_clrs, matched_p
     if num_z_planes!=0:
         Filenames_stim = [ii + ' Z='+ str(jj)  for jj in num_z_planes for ii in Stimulus_Name]
     else:
-        Filenames_stim = [ii + ' Z='+ str(jj+1) for jj in range(0,np.size(maps,2)) for ii in Stimulus_Name]
+        Filenames_stim = [ii + ' Z='+ str(jj+1) for jj in range(0,np.size(maps,2)/np.size(Stimulus_Name)) for ii in Stimulus_Name]
     
     ############ Plot Colormaps of scores ############    
     for ii in range(0,np.size(Filenames_stim)):
