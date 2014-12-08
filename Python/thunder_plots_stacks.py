@@ -34,7 +34,7 @@ def plot_pca_maps_for_stacks(pca, maps, pts, clrs, recon, unique_clrs, matched_p
     ############ Plot Colormaps of scores ############    
     for ii in range(0,np.size(Filenames_stim)):
         with sns.axes_style("white"):
-            fig2 = plt.imshow(maps[:,:,ii,:].transpose((1,0,2)))
+            fig2 = plt.imshow(maps[:,:,ii,:])
             plt.title((Filenames_stim[ii]))
             plt.axis('off')                   
             fig2 = plt.gcf()
