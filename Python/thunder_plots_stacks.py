@@ -91,7 +91,13 @@ def plot_pca_maps_for_stacks(pca, maps, pts, clrs, recon, unique_clrs, matched_p
            same_stim_folders = [Filenames_stim.index(ii) for ii in Filenames_stim if ii.find(Stimulus_Name[stim])==0]
            fig2 = plt.subplot(221)
            matched_pixels_stim = matched_pixels[:,same_stim_folders]
-           fig2 = sns.boxplot(np.transpose(matched_pixels_stim),linewidth=3, widths=.5, color=unique_clrs)
+           
+           if np.size(matched_pixels_stim,1) == 1:
+               for ii in xrange(0,np.size(matched_pixels_stim,0)):
+                   fig2 = plt.plot(ii+1,np.transpose(matched_pixels_stim[ii,:]),'o', color=unique_clrs[ii])
+               plt.xlim([0,np.size(matched_pixels_stim,0)+1])
+           else:
+               fig2 = sns.boxplot(np.transpose(matched_pixels_stim),linewidth=3, widths=.5, color=unique_clrs)
            
            for ii in range(0,np.size(unique_clrs,0)):
                fig2 = plt.plot(np.repeat(ii+1,np.size(matched_pixels_stim,1)), np.transpose(matched_pixels_stim[ii,:]),'s', \
